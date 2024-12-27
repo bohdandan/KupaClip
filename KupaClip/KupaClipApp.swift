@@ -1,16 +1,10 @@
-//
-//  KupaClipApp.swift
-//  KupaClip
-//
-//  Created by Bohdan Danyliuk on 25/12/2024.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct KupaClipApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var clipboardManager = ClipboardManager()
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -29,16 +23,33 @@ struct KupaClipApp: App {
     var body: some Scene {
         Settings {
             MainSettingsView()
+                .environmentObject(clipboardManager)
         }
         
-        MenuBarExtra("Paste psate paste", systemImage: "list.clipboard") {
-            SettingsLink{
+        MenuBarExtra("Paste paste paste", systemImage: "list.clipboard") {
+            SettingsLink {
                 Text("Settings")
-            }.keyboardShortcut(",", modifiers: .command)
-            Divider()
-            Button("Quit") {
-                exit(0)
             }
+            .keyboardShortcut(",", modifiers: .command)
+            
+            Divider()
+            
+            if !clipboardManager.clipboardItems.isEmpty {
+                ForEach(clipboardManager.clipboardItems.prefix(5)) { item in
+                    Button(item.content) {
+                        clipboardManager.copyToClipboard(item: item)
+                    }
+                }
+                Divider()
+            }
+            
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }
+            .keyboardShortcut("q", modifiers: .command)
         }
+        .menuBarExtraStyle(.window)
+        .modelContainer(sharedModelContainer)
+        .environmentObject(clipboardManager)
     }
 }

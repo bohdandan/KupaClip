@@ -37,9 +37,22 @@
 		F401C6372D1C2192007B98AA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B48F1C482D1EC4B700BFF6F0 /* Exceptions for "KupaClip" folder in "KupaClip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F401C6042D1C2121007B98AA /* KupaClip */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F401C6072D1C2121007B98AA /* KupaClip */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B48F1C482D1EC4B700BFF6F0 /* Exceptions for "KupaClip" folder in "KupaClip" target */,
+			);
 			path = KupaClip;
 			sourceTree = "<group>";
 		};
@@ -416,7 +429,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"KupaClip/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = KupaClip/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = NSAppleEventsUsageDescription;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -442,7 +456,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"KupaClip/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = KupaClip/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = NSAppleEventsUsageDescription;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
