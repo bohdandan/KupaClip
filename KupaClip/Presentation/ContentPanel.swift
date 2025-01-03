@@ -19,7 +19,7 @@ class ContentPanel: NSPanel {
     private func setupWindow() {
         backgroundColor = .clear
         isOpaque = false
-        hasShadow = false
+        hasShadow = true
         level = .floating
         isMovableByWindowBackground = true
         titlebarAppearsTransparent = true

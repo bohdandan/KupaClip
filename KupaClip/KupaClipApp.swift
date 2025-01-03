@@ -31,7 +31,7 @@ struct KupaClipApp: App {
             MainSettingsView()
         }
         
-        MenuBarExtra("Paste psate paste", systemImage: "list.clipboard") {
+        MenuBarExtra("Kupa clip", systemImage: "list.clipboard") {
             SettingsLink{
                 Text("Settings")
             }.keyboardShortcut(",", modifiers: .command)
