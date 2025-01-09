@@ -4,7 +4,6 @@ struct PopupHeader: View {
     @Binding var query: String
     @Binding var activeMode: PopupMode
     
-    
     struct PopupModeDetails {
         var systemName : String
         var name : String
@@ -21,7 +20,7 @@ struct PopupHeader: View {
         switch mode {
         case .clipboard:
             return PopupModeDetails(systemName: "clipboard", name: "Clipboard", color: .orange)
-        case .snippet:
+        case .snippets:
             return PopupModeDetails(systemName: "text.redaction", name: "Snippets", color: .green)
         case .tools:
             return PopupModeDetails(systemName: "wrench.and.screwdriver", name: "Tools", color: .blue)

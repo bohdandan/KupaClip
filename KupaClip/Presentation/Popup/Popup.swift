@@ -3,39 +3,31 @@ import SwiftUI
 
 struct Popup: View {
     var dismiss: () -> ()
-    
-    @State var activeMode: PopupMode = .clipboard
-    @State var query: String = ""
-    
-    @State var clipboard: PopupListViewModel = PopupListViewModel(items: DummyData.clipboard)
-    
-    @State var snippets: PopupListViewModel = PopupListViewModel(items: DummyData.snippets)
-    
-    @State var tools: PopupListViewModel = PopupListViewModel(items: DummyData.tools)
+    @State var state = PopupState()
     
     var body: some View {
             ZStack {
                 VStack {
-                    PopupHeader(query: $query, activeMode: $activeMode)
+                    PopupHeader(query: $state.query, activeMode: $state.activeMode)
             
-                    if (activeMode == .clipboard) {
-                        list(viewModel: clipboard)
+                    if (state.isClipboard()) {
+                        list(viewModel: state.clipboard)
                         .transition(.asymmetric (
                             insertion: .move(edge: .leading),
                             removal: .move(edge: .leading)
                         ))
                     }
                     
-                    if (activeMode == .snippet) {
-                        list(viewModel: snippets)
+                    if (state.isSnippets()) {
+                        list(viewModel: state.snippets)
                         .transition(.asymmetric (
                             insertion: .move(edge: .trailing),
                             removal: .move(edge: .leading)
                         ))
                     }
                     
-                    if (activeMode == .tools) {
-                        list(viewModel: tools)
+                    if (state.isTools()) {
+                        list(viewModel: state.tools)
                         .transition(.asymmetric (
                             insertion: .move(edge: .trailing),
                             removal: .move(edge: .trailing)
@@ -55,7 +47,7 @@ struct Popup: View {
     private func list(viewModel: PopupListViewModel) -> some View {
         ScrollViewReader { scrollProxy in
             ScrollView([.vertical]) {
-                ForEach(viewModel.items, id:\.id) { item in
+                ForEach(viewModel.filteredItems, id:\.id) { item in
                     HStack {
                         Text(item.title)
                         Spacer()
@@ -100,25 +92,19 @@ struct Popup: View {
            return event
        }
    }
-    private func getActiveViewModel() -> PopupListViewModel {
-        switch activeMode {
-        case .clipboard:
-            clipboard
-        case .snippet:
-            snippets
-        default:
-            tools
-        }
-    }
    
    private func handleKeyEvent(_ event: NSEvent) {
        switch event.keyCode {
        case 126:
-           getActiveViewModel().selectPrevious()
+           state.selectPrevious()
        case 125:
-           getActiveViewModel().selectNext()
+           state.selectNext()
        case 53:
-           dismiss()
+           if (state.query.isEmpty) {
+               dismiss()
+           } else {
+               state.query = ""
+           }
        default:
            break
        }
@@ -126,7 +112,10 @@ struct Popup: View {
 }
 
 #Preview() {
-    Popup(){
+    AppContext.set(ClipboardStorage(maxLimit: 5, data: DummyData.clipboard))
+    AppContext.set(SnippetStorage(data: DummyData.snippets))
+    AppContext.set(ToolStorage(data: DummyData.tools))
+    return Popup() {
         print("Close")
     }
 }

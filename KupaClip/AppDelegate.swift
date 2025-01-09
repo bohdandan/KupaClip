@@ -14,6 +14,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         setupHotkey()
+        let clipboardStorage = ClipboardStorage(maxLimit: 10)
+        AppContext.set(clipboardStorage)
+        AppContext.set(ClipboardService(storage: clipboardStorage))
+        AppContext.set(SnippetStorage(data: DummyData.snippets))
+        AppContext.set(ToolStorage(data: DummyData.tools))
     }
 
     private func setupHotkey() {

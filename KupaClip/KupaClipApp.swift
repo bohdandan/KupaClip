@@ -10,12 +10,11 @@ import SwiftData
 
 @main
 struct KupaClipApp: App {
+    
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Snippet.self,
-            Folder.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
