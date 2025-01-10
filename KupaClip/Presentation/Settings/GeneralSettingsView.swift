@@ -1,4 +1,5 @@
 import SwiftUI
+import KeyboardShortcuts
 
 struct GeneralSettingsView: View {
     @AppStorage("showPreview") private var showPreview = true
@@ -6,7 +7,9 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         Form {
-            Text("General")
+            Form {
+                KeyboardShortcuts.Recorder("Toggle Popup:", name: .togglePopup)
+            }
         }
     }
 }

@@ -2,14 +2,18 @@ import SwiftUI
 
 
 struct Popup: View {
-    var dismiss: () -> ()
-    @State var state = PopupState()
+    @State var state: PopupState
+    
+    init() {
+        self.state = AppContext.get(PopupState.self)
+        self.state.loadFromStorage()
+    }
     
     var body: some View {
             ZStack {
                 VStack {
                     PopupHeader(query: $state.query, activeMode: $state.activeMode)
-            
+                    
                     if (state.isClipboard()) {
                         list(viewModel: state.clipboard)
                         .transition(.asymmetric (
@@ -88,34 +92,45 @@ struct Popup: View {
     
     private func addKeyEventListener() {
        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-           handleKeyEvent(event)
-           return event
+           return handleKeyEvent(event) ? nil : event
        }
    }
    
-   private func handleKeyEvent(_ event: NSEvent) {
-       switch event.keyCode {
-       case 126:
-           state.selectPrevious()
-       case 125:
-           state.selectNext()
-       case 53:
-           if (state.query.isEmpty) {
+    private func handleKeyEvent(_ event: NSEvent) -> Bool {
+        Log.clipboard.log("keyboard event: \(event.keyCode)")
+        
+        switch event.keyCode {
+        case 126: // Up arrow key
+            state.selectPrevious()
+            return true
+        case 125: // Down arrow key
+            state.selectNext()
+            return true
+        case 53: // Escape key
+            if (state.query.isEmpty) {
                dismiss()
-           } else {
+            } else {
                state.query = ""
-           }
-       default:
-           break
-       }
-   }
+            }
+            return true
+        case 36: // Enter/Return key
+            state.action()
+            dismiss()
+            return true
+        default:
+            return false
+        }
+    }
+    
+    private func dismiss() {
+        AppContext.get(FloatingPanelManager.self).close()
+    }
 }
 
 #Preview() {
     AppContext.set(ClipboardStorage(maxLimit: 5, data: DummyData.clipboard))
     AppContext.set(SnippetStorage(data: DummyData.snippets))
     AppContext.set(ToolStorage(data: DummyData.tools))
-    return Popup() {
-        print("Close")
-    }
+    AppContext.set(PopupState())
+    return Popup()
 }

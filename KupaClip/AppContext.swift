@@ -13,8 +13,8 @@ final class AppContext {
         storage[key] = instance
     }
 
-    static func get<T>(_ type: T.Type) -> T? {
+    static func get<T>(_ type: T.Type) -> T {
         let key = ObjectIdentifier(type)
-        return storage[key] as? T
+        return storage[key] as! T
     }
 }

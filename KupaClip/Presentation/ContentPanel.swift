@@ -1,10 +1,13 @@
 import AppKit
 import SwiftUI
 
-//Inspired - https://github.com/Archetapp/FloatingPanelTutorial
+//Inspired by - https://github.com/Archetapp/FloatingPanelTutorial
 class ContentPanel: NSPanel {
+    var nestedView: Popup
     
-    init() {
+    init(nestedView: Popup) {
+        self.nestedView = nestedView
+        
         super.init(
             contentRect: .zero,
             styleMask: [.borderless, .nonactivatingPanel, .titled],
@@ -33,11 +36,7 @@ class ContentPanel: NSPanel {
     }
     
     private func setupContentView() {
-        let contentView = Popup() {
-            self.close()
-        }
-        
-        let hostingView = NSHostingView(rootView: contentView)
+        let hostingView = NSHostingView(rootView: self.nestedView)
         self.contentView = hostingView
         
         hostingView.setFrameSize(hostingView.fittingSize)
@@ -62,6 +61,6 @@ class ContentPanel: NSPanel {
     
     override func resignKey() {
         super.resignKey()
-        close()
+        AppContext.get(FloatingPanelManager.self).close()
     }
 }

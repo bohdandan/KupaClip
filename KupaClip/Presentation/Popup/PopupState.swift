@@ -5,33 +5,38 @@
 //  Created by Bohdan Danyliuk on 06/01/2025.
 //
 import SwiftUI
+import KeyboardShortcuts
 
 @Observable
 class PopupState {
-    
     var activeMode: PopupMode = .clipboard
     
     var query: String = "" {
         didSet {
-            clipboard.updateFilteredItems(query: query)
-            snippets.updateFilteredItems(query: query)
-            tools.updateFilteredItems(query: query)
+            filterLists()
         }
     }
     
     var clipboard: PopupListViewModel = PopupListViewModel()
-    
     var snippets: PopupListViewModel = PopupListViewModel()
-
     var tools: PopupListViewModel = PopupListViewModel()
 
-
     init() {
-        clipboard.items = AppContext.get(ClipboardStorage.self)?.data ?? []
-        snippets.items = AppContext.get(SnippetStorage.self)?.data ?? []
-        tools.items = AppContext.get(ToolStorage.self)?.data ?? []
+        loadFromStorage()
     }
-   
+    
+    func loadFromStorage() {
+        clipboard = PopupListViewModel(AppContext.get(ClipboardStorage.self).data)
+        snippets = PopupListViewModel(AppContext.get(SnippetStorage.self).data)
+        tools = PopupListViewModel(AppContext.get(ToolStorage.self).data)
+    }
+    
+    func filterLists() {
+        clipboard.updateFilteredItems(query: query)
+        snippets.updateFilteredItems(query: query)
+        tools.updateFilteredItems(query: query)
+    }
+    
     func isClipboard() -> Bool {
         return activeMode == .clipboard
     }
@@ -61,5 +66,11 @@ class PopupState {
     
     func selectNext() {
         getActiveViewModel().selectNext()
+    }
+    
+    func action() {
+        guard isClipboard() else { return }
+        AppContext.get(ClipboardService.self).writeToClipboard(clipboard.selectedItem?.title)
+        AppContext.get(PasteService.self).pasteToActiveApp()
     }
 }

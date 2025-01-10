@@ -1,6 +1,15 @@
 {
-  "originHash" : "01f286328852d165d87f8fbee99b01f9c2c936f57ac234f76396f74f9d2496dd",
+  "originHash" : "b4a29600b1fb4b2fa5a8e6aef50379c070c5230f46aaef6bf00c5d2ff75a958f",
   "pins" : [
+    {
+      "identity" : "defaults",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/Defaults",
+      "state" : {
+        "revision" : "3d98a76aab39eedf957274e98e15ebe6bb390b87",
+        "version" : "9.0.1"
+      }
+    },
     {
       "identity" : "hotkey",
       "kind" : "remoteSourceControl",
@@ -8,6 +17,24 @@
       "state" : {
         "branch" : "main",
         "revision" : "4d02d80de143d69b7eeb5962729591a157a57ede"
+      }
+    },
+    {
+      "identity" : "keyboardshortcuts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
+      "state" : {
+        "revision" : "7ecc38bb6edf7d087d30e737057b8d8a9b7f51eb",
+        "version" : "2.2.4"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
       }
     }
   ],

@@ -11,7 +11,20 @@ import SwiftData
 @main
 struct KupaClipApp: App {
     
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    init() {
+        DispatchQueue.main.async {
+            NSApp.setActivationPolicy(.accessory)
+        }
+        
+        let clipboardStorage = ClipboardStorage(maxLimit: 10)
+        AppContext.set(clipboardStorage)
+        AppContext.set(ClipboardService(storage: clipboardStorage))
+        AppContext.set(SnippetStorage(data: DummyData.snippets))
+        AppContext.set(ToolStorage(data: DummyData.tools))
+        AppContext.set(PasteService())
+        AppContext.set(PopupState())
+        AppContext.set(FloatingPanelManager())
+    }
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -26,10 +39,10 @@ struct KupaClipApp: App {
     }()
 
     var body: some Scene {
-        Settings {
-            MainSettingsView()
-        }
-        
+//        Settings {
+//            MainSettingsView()
+//        }
+//        
         MenuBarExtra("Kupa clip", systemImage: "list.clipboard") {
             SettingsLink{
                 Text("Settings")

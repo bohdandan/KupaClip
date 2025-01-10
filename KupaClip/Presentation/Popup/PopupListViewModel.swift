@@ -9,16 +9,17 @@ import Combine
 
 @Observable
 class PopupListViewModel {
-    var items: [String] = [] {
-        didSet {
-            updateFilteredItems()
-        }
-    }
+    var items: [String]
     
     private(set) var filteredItems: [PopupListItem] = []
     private var selectedItemId: UUID?
     
-    init() {
+    convenience init() {
+        self.init (nil)
+    }
+    
+    init(_ items: [String]?) {
+        self.items = items ?? []
         updateFilteredItems()
     }
     
