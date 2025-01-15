@@ -36,7 +36,7 @@ final class FloatingPanelManager {
         let contentPanel = ContentPanel(nestedView: Popup())
         
         contentWindow = contentPanel
-        
+    
         contentPanel.makeKeyAndOrderFront(nil)
         contentPanel.makeKey()
     }

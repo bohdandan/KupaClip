@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F401C6362D1C2180007B98AA /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = F401C6352D1C217A007B98AA /* LICENSE */; };
 		F401C6382D1C2195007B98AA /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F401C6372D1C2192007B98AA /* README.md */; };
-		F401C66D2D1C2831007B98AA /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = F401C66C2D1C2831007B98AA /* HotKey */; };
 		F401C6AE2D31811A007B98AA /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = F401C6AD2D31811A007B98AA /* Defaults */; };
 		F401C6B12D318156007B98AA /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = F401C6B02D318156007B98AA /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
@@ -63,7 +62,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F401C6AE2D31811A007B98AA /* Defaults in Frameworks */,
-				F401C66D2D1C2831007B98AA /* HotKey in Frameworks */,
 				F401C6B12D318156007B98AA /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,7 +125,6 @@
 			);
 			name = KupaClip;
 			packageProductDependencies = (
-				F401C66C2D1C2831007B98AA /* HotKey */,
 				F401C6AD2D31811A007B98AA /* Defaults */,
 				F401C6B02D318156007B98AA /* KeyboardShortcuts */,
 			);
@@ -214,7 +211,6 @@
 			mainGroup = F401C5FC2D1C2121007B98AA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F401C66B2D1C2831007B98AA /* XCRemoteSwiftPackageReference "HotKey" */,
 				F401C6AC2D31811A007B98AA /* XCRemoteSwiftPackageReference "Defaults" */,
 				F401C6AF2D318156007B98AA /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
@@ -424,6 +420,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"KupaClip/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -431,7 +428,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bohdandan.KupaClip;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnetic-marten.KupaClip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -450,6 +447,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"KupaClip/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,7 +455,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bohdandan.KupaClip;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnetic-marten.KupaClip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -570,14 +568,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F401C66B2D1C2831007B98AA /* XCRemoteSwiftPackageReference "HotKey" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/soffes/HotKey";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		F401C6AC2D31811A007B98AA /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -597,11 +587,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F401C66C2D1C2831007B98AA /* HotKey */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F401C66B2D1C2831007B98AA /* XCRemoteSwiftPackageReference "HotKey" */;
-			productName = HotKey;
-		};
 		F401C6AD2D31811A007B98AA /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F401C6AC2D31811A007B98AA /* XCRemoteSwiftPackageReference "Defaults" */;

@@ -44,7 +44,8 @@ struct Popup: View {
                 .cornerRadius(10)
                 .onAppear {
                    addKeyEventListener()
-               }
+                }
+                .ignoresSafeArea()
             }
     }
     
@@ -128,9 +129,9 @@ struct Popup: View {
 }
 
 #Preview() {
-    AppContext.set(ClipboardStorage(maxLimit: 5, data: DummyData.clipboard))
-    AppContext.set(SnippetStorage(data: DummyData.snippets))
-    AppContext.set(ToolStorage(data: DummyData.tools))
-    AppContext.set(PopupState())
-    return Popup()
+//    AppContext.set(ClipboardStorage(maxLimit: 5, data: DummyData.clipboard))
+//    AppContext.set(SnippetStorage(data: DummyData.snippets))
+//    AppContext.set(ToolStorage(data: DummyData.tools))
+//    AppContext.set(PopupState())
+//    return Popup()
 }

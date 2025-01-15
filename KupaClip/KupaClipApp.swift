@@ -12,7 +12,7 @@ import SwiftData
 struct KupaClipApp: App {
     
     init() {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             NSApp.setActivationPolicy(.accessory)
         }
         
@@ -39,10 +39,10 @@ struct KupaClipApp: App {
     }()
 
     var body: some Scene {
-//        Settings {
-//            MainSettingsView()
-//        }
-//        
+        WindowGroup(id: "setings") {
+            MainSettingsView()
+        }
+
         MenuBarExtra("Kupa clip", systemImage: "list.clipboard") {
             SettingsLink{
                 Text("Settings")

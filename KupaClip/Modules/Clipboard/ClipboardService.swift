@@ -13,32 +13,43 @@ class ClipboardService {
     private let storage: ClipboardStorage
     var bag = Set<AnyCancellable>()
     
+    private var activeAppBundleIdentifier: String { NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "" }
+    
     init(storage: ClipboardStorage, pollingInterval: TimeInterval = 0.7) {
         self.storage = storage
-        startObserving(with: pollingInterval)
+        startObservingClipboard(with: pollingInterval)
     }
     
     deinit {
         bag.removeAll()
     }
     
-    private func startObserving(with interval: TimeInterval) {
+    private func startObservingClipboard(with interval: TimeInterval) {
         Timer.publish(every: interval, on: .main, in: .common)
             .autoconnect()
-            .map { [weak self] _ -> String? in
-                self?.pasteboard.string(forType: .string)
+            .map { [weak self] _ in
+                self?.pasteboard.changeCount
             }
-            .removeDuplicates()
-            .compactMap { $0 } // Remove nil values
-            .sink { [weak self] newContent in
-               self?.handleClipboardChange(newContent)
+            .removeDuplicates() // skip if no new clipboard items
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.handleClipboardChange(pasteboard: self.pasteboard, appBundleIdentifier: self.activeAppBundleIdentifier)
             }
             .store(in: &bag)
     }
     
-    private func handleClipboardChange(_ newContent: String) {
-        Log.clipboard.info("New clipboard content: \(newContent)")
-        self.storage.addToHistory(newContent)
+    private func handleClipboardChange(pasteboard: NSPasteboard, appBundleIdentifier: String) {
+        // Excluded app
+        guard !isAppExcluded(appBundleIdentifier) else { return }
+        
+        let clipboardItem = CliboardItem(pasteboard: pasteboard, appBundleIdentifier: appBundleIdentifier)
+        Log.clipboard.info("New clipboard content: \(String(describing: clipboardItem))")
+        self.storage.addToHistory(clipboardItem)
+    }
+    
+    private func isAppExcluded(_ app: String) -> Bool {
+        let excludedApps = ["test.app"]
+        return excludedApps.contains(app)
     }
     
     func writeToClipboard(_ string: String?) {

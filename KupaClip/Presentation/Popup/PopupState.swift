@@ -26,7 +26,7 @@ class PopupState {
     }
     
     func loadFromStorage() {
-        clipboard = PopupListViewModel(AppContext.get(ClipboardStorage.self).data)
+        clipboard = PopupListViewModel(AppContext.get(ClipboardStorage.self).data.map { $0.content })
         snippets = PopupListViewModel(AppContext.get(SnippetStorage.self).data)
         tools = PopupListViewModel(AppContext.get(ToolStorage.self).data)
     }
