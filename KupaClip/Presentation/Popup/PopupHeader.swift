@@ -2,36 +2,24 @@ import SwiftUI
 
 struct PopupHeader: View {
     @Binding var query: String
-    @Binding var activeMode: PopupMode
-    
-    struct PopupModeDetails {
-        var systemName : String
-        var name : String
-        var color : Color
-    }
+    @Binding var activeModuleName: String
+    @ObservationIgnored var modules: [Module]
     
     func next() {
-        guard let currentIndex = PopupMode.allCases.firstIndex(of: activeMode) else { return }
-        let nextIndex = (currentIndex + 1) % PopupMode.allCases.count
-        activeMode = PopupMode.allCases[nextIndex]
+//        guard let currentIndex = PopupMode.allCases.firstIndex(of: activeMode) else { return }
+//        let nextIndex = (currentIndex + 1) % PopupMode.allCases.count
+//        activeMode = PopupMode.allCases[nextIndex]
     }
     
-    func getDetails(mode: PopupMode) -> PopupModeDetails {
-        switch mode {
-        case .clipboard:
-            return PopupModeDetails(systemName: "clipboard", name: "Clipboard", color: .orange)
-        case .snippets:
-            return PopupModeDetails(systemName: "text.redaction", name: "Snippets", color: .green)
-        case .tools:
-            return PopupModeDetails(systemName: "wrench.and.screwdriver", name: "Tools", color: .blue)
-        }
+    func isActive(_ module: Module) -> Bool {
+        return activeModuleName == module.name
     }
     
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .frame(width: 15, height: 25)
-                .foregroundColor(getDetails(mode: activeMode).color)
+//                .foregroundColor(activeModule.getModuleDetails().color)
                 .bold()
                 .opacity(0.6)
             
@@ -47,18 +35,18 @@ struct PopupHeader: View {
                     }
                     return .handled
                 }
-            
-            ForEach(PopupMode.allCases) { mode in
-                let modeDetails : PopupModeDetails = getDetails(mode: mode)
-                Image(systemName: modeDetails.systemName)
+            ForEach(modules, id: \.name) { module in
+                let moduleDetails = module.getModuleDetails()
+        
+                Image(systemName: moduleDetails.iconSystemName)
                     .frame(width: 15)
-                    .foregroundColor(modeDetails.color)
-                    .help(modeDetails.name)
-                    .opacity(mode == activeMode ? 0.8 : 0.5)
-                    .symbolEffect(.scale.up, isActive: mode == activeMode)
+                    .foregroundColor(moduleDetails.color)
+                    .help(module.name)
+                    .opacity(isActive(module) ? 0.8 : 0.5)
+                    .symbolEffect(.scale.up, isActive: isActive(module))
                     .onTapGesture {
                         withAnimation(.easeIn(duration: 0.2)) {
-                            activeMode = mode
+                            activeModuleName = module.name
                         }
                     }
             }

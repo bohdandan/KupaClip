@@ -18,7 +18,6 @@ class PasteService {
     
     func pasteToActiveApp() {
         checkAccessibilityEnabled()
-        
     }
 }
 

@@ -9,55 +9,41 @@ import KeyboardShortcuts
 
 @Observable
 class PopupState {
-    var activeMode: PopupMode = .clipboard
+    var activeModule: ModuleDetails
     
     var query: String = "" {
         didSet {
-            filterLists()
+            loadFromStorage()
         }
     }
     
-    var clipboard: PopupListViewModel = PopupListViewModel()
-    var snippets: PopupListViewModel = PopupListViewModel()
-    var tools: PopupListViewModel = PopupListViewModel()
+    var popupListViewModels: [String: PopupListViewModel] = [:]
+    
+    @ObservationIgnored var modules: [Module]
 
-    init() {
+    init(modules: [Module]) {
+        self.modules = modules
+        self.activeModule = modules.first!.getModuleDetails()
+        self.modules.forEach { module in
+            popupListViewModels[module.getModuleDetails().name] = PopupListViewModel()
+        }
+        
         loadFromStorage()
     }
     
     func loadFromStorage() {
-        clipboard = PopupListViewModel(AppContext.get(ClipboardStorage.self).data.map { $0.content })
-        snippets = PopupListViewModel(AppContext.get(SnippetStorage.self).data)
-        tools = PopupListViewModel(AppContext.get(ToolStorage.self).data)
+        for (key, value) in popupListViewModels {
+            let module = modules.first(where: {$0.getModuleDetails().name == key})!
+            value.setItems(module.getStorage().getFilteredListOfItems(query: query))
+        }
     }
     
-    func filterLists() {
-        clipboard.updateFilteredItems(query: query)
-        snippets.updateFilteredItems(query: query)
-        tools.updateFilteredItems(query: query)
-    }
-    
-    func isClipboard() -> Bool {
-        return activeMode == .clipboard
-    }
-    
-    func isSnippets() -> Bool {
-        return activeMode == .snippets
-    }
-    
-    func isTools() -> Bool {
-        return activeMode == .tools
+    private func getActiveModule() -> Module {
+        return modules.first(where: {$0.getModuleDetails().name == activeModule.name})!
     }
     
     private func getActiveViewModel() -> PopupListViewModel {
-        switch activeMode {
-        case .clipboard:
-            clipboard
-        case .snippets:
-            snippets
-        default:
-            tools
-        }
+        return popupListViewModels[activeModule.name]!
     }
     
     func selectPrevious() {
@@ -69,8 +55,7 @@ class PopupState {
     }
     
     func action() {
-        guard isClipboard() else { return }
-        AppContext.get(ClipboardService.self).writeToClipboard(clipboard.selectedItem?.title)
-        AppContext.get(PasteService.self).pasteToActiveApp()
+        guard let item = getActiveViewModel().selectedItem?.title else { return }
+        getActiveModule().getActionHandler().actionOn(on: item)
     }
 }

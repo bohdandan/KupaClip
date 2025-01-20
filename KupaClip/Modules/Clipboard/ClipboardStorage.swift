@@ -4,10 +4,8 @@
 //
 //  Created by Bohdan Danyliuk on 05/01/2025.
 //
-import SwiftUI
 
-@Observable
-final class ClipboardStorage: ObservableObject {
+final class ClipboardStorage: ModuleStorage {
     
     private(set) var data: [CliboardItem] = []
     
@@ -20,6 +18,12 @@ final class ClipboardStorage: ObservableObject {
     init(maxLimit: Int, data: [CliboardItem]) {
         self.maxLimit = maxLimit
         self.data = data
+    }
+    
+    func getFilteredListOfItems(query: String) -> [String] {
+        return data
+            .filter { query.isEmpty || $0.content.localizedCaseInsensitiveContains(query) }
+            .map { $0.content }
     }
     
     func addToHistory(_ item: CliboardItem) {

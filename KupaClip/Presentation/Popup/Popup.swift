@@ -2,39 +2,26 @@ import SwiftUI
 
 
 struct Popup: View {
-    @State var state: PopupState
+    @Environment(\.popupState) var state
     
     init() {
-        self.state = AppContext.get(PopupState.self)
+        self.state = AppContext.shared.get(PopupState.self)
         self.state.loadFromStorage()
     }
     
     var body: some View {
             ZStack {
                 VStack {
-                    PopupHeader(query: $state.query, activeMode: $state.activeMode)
+                    PopupHeader(query: $state.query, activeModuleName: $state.activeModuleName, modules: state.modules)
                     
-                    if (state.isClipboard()) {
-                        list(viewModel: state.clipboard)
+                    ForEach(Array(state.modules.enumerated()), id: \.1.name) { index, module in
+                        let insertion: Edge = index == 0 ? .leading : .trailing
+                        let removal: Edge = index == state.modules.endIndex - 1 ? .trailing : .leading
+
+                        list(viewModel: state.popupListViewModels[module.name]!)
                         .transition(.asymmetric (
-                            insertion: .move(edge: .leading),
-                            removal: .move(edge: .leading)
-                        ))
-                    }
-                    
-                    if (state.isSnippets()) {
-                        list(viewModel: state.snippets)
-                        .transition(.asymmetric (
-                            insertion: .move(edge: .trailing),
-                            removal: .move(edge: .leading)
-                        ))
-                    }
-                    
-                    if (state.isTools()) {
-                        list(viewModel: state.tools)
-                        .transition(.asymmetric (
-                            insertion: .move(edge: .trailing),
-                            removal: .move(edge: .trailing)
+                            insertion: .move(edge: insertion),
+                            removal: .move(edge: removal)
                         ))
                     }
                     Spacer()
@@ -52,7 +39,7 @@ struct Popup: View {
     private func list(viewModel: PopupListViewModel) -> some View {
         ScrollViewReader { scrollProxy in
             ScrollView([.vertical]) {
-                ForEach(viewModel.filteredItems, id:\.id) { item in
+                ForEach(viewModel.items, id:\.id) { item in
                     HStack {
                         Text(item.title)
                         Spacer()
@@ -124,7 +111,7 @@ struct Popup: View {
     }
     
     private func dismiss() {
-        AppContext.get(FloatingPanelManager.self).close()
+        AppContext.shared.get(FloatingPanelManager.self).close()
     }
 }
 
@@ -133,5 +120,5 @@ struct Popup: View {
 //    AppContext.set(SnippetStorage(data: DummyData.snippets))
 //    AppContext.set(ToolStorage(data: DummyData.tools))
 //    AppContext.set(PopupState())
-//    return Popup()
+    return Popup()
 }

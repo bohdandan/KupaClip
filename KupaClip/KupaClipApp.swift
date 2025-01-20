@@ -16,14 +16,17 @@ struct KupaClipApp: App {
             NSApp.setActivationPolicy(.accessory)
         }
         
-        let clipboardStorage = ClipboardStorage(maxLimit: 10)
-        AppContext.set(clipboardStorage)
-        AppContext.set(ClipboardService(storage: clipboardStorage))
-        AppContext.set(SnippetStorage(data: DummyData.snippets))
-        AppContext.set(ToolStorage(data: DummyData.tools))
-        AppContext.set(PasteService())
-        AppContext.set(PopupState())
-        AppContext.set(FloatingPanelManager())
+        let appContext = AppContext.shared
+        let modules: [any Module] = [
+            ClipboardModule()
+        ]
+        modules.forEach {$0.initialise(appContext)}
+        appContext.set(modules)
+        appContext.set(SnippetStorage(data: DummyData.snippets))
+        appContext.set(ToolStorage(data: DummyData.tools))
+        appContext.set(PasteService())
+        appContext.set(PopupState(modules: modules))
+        appContext.set(FloatingPanelManager())
     }
 
     var sharedModelContainer: ModelContainer = {

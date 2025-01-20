@@ -9,34 +9,22 @@ import Combine
 
 @Observable
 class PopupListViewModel {
-    var items: [String]
-    
-    private(set) var filteredItems: [PopupListItem] = []
+    private(set) var items: [PopupListItem] = []
     private var selectedItemId: UUID?
     
-    convenience init() {
-        self.init (nil)
-    }
-    
-    init(_ items: [String]?) {
-        self.items = items ?? []
-        updateFilteredItems()
-    }
-    
-    func updateFilteredItems(query:  String = "") {
-        filteredItems = items
-            .filter { query.isEmpty || $0.localizedCaseInsensitiveContains(query) }
-            .enumerated().map { index, title in
+    func setItems(_ items: [String]) {
+        self.items = items
+            .enumerated()
+            .map { index, title in
                 let shortcut = index < 9 ? index + 1 : nil
                 return PopupListItem(title: title, shortcut: shortcut)
             }
         selectNext()
     }
-    
+
     var selectedItem: PopupListItem? {
         get {
-            guard let selectedItemId = selectedItemId else { return nil }
-            return filteredItems.first { $0.id == selectedItemId }
+            return items.first { $0.id == selectedItemId }
         }
         set {
             selectedItemId = newValue?.id
@@ -44,21 +32,21 @@ class PopupListViewModel {
     }
     
     func selectNext() {
-       guard let currentIndex = selectedItem.flatMap({ filteredItems.firstIndex(of: $0) }) else {
-           selectedItemId = filteredItems.first?.id
+       guard let currentIndex = selectedItem.flatMap({ items.firstIndex(of: $0) }) else {
+           selectedItemId = items.first?.id
            return
        }
-       let nextIndex = (currentIndex + 1) % filteredItems.count
-       selectedItemId = filteredItems[nextIndex].id
+       let nextIndex = (currentIndex + 1) % items.count
+       selectedItemId = items[nextIndex].id
    }
    
    func selectPrevious() {
-       guard let currentIndex = selectedItem.flatMap({ filteredItems.firstIndex(of: $0) }) else {
-           selectedItemId = filteredItems.last?.id
+       guard let currentIndex = selectedItem.flatMap({ items.firstIndex(of: $0) }) else {
+           selectedItemId = items.last?.id
            return
        }
-       let previousIndex = (currentIndex - 1 + filteredItems.count) % filteredItems.count
-       selectedItemId = filteredItems[previousIndex].id
+       let previousIndex = (currentIndex - 1 + items.count) % items.count
+       selectedItemId = items[previousIndex].id
    }
     
     func isSelected(item: PopupListItem) -> Bool {

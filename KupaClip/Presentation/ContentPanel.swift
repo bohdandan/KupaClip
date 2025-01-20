@@ -61,6 +61,6 @@ class ContentPanel: NSPanel {
     
     override func resignKey() {
         super.resignKey()
-        AppContext.get(FloatingPanelManager.self).close()
+        AppContext.shared.get(FloatingPanelManager.self).close()
     }
 }
