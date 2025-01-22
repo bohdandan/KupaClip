@@ -17,13 +17,14 @@ struct KupaClipApp: App {
         }
         
         let appContext = AppContext.shared
+        
         let modules: [any Module] = [
-            ClipboardModule()
+            ClipboardModule(appContext),
+            SnipetModule(appContext),
+            ToolModule(appContext),
         ]
-        modules.forEach {$0.initialise(appContext)}
+        
         appContext.set(modules)
-        appContext.set(SnippetStorage(data: DummyData.snippets))
-        appContext.set(ToolStorage(data: DummyData.tools))
         appContext.set(PasteService())
         appContext.set(PopupState(modules: modules))
         appContext.set(FloatingPanelManager())
@@ -42,7 +43,7 @@ struct KupaClipApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup(id: "setings") {
+        Settings {
             MainSettingsView()
         }
 

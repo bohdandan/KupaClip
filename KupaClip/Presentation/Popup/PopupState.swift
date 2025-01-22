@@ -7,9 +7,10 @@
 import SwiftUI
 import KeyboardShortcuts
 
+
 @Observable
 class PopupState {
-    var activeModule: ModuleDetails
+    var activeModuleName: String
     
     var query: String = "" {
         didSet {
@@ -23,9 +24,9 @@ class PopupState {
 
     init(modules: [Module]) {
         self.modules = modules
-        self.activeModule = modules.first!.getModuleDetails()
+        self.activeModuleName = modules.first!.name
         self.modules.forEach { module in
-            popupListViewModels[module.getModuleDetails().name] = PopupListViewModel()
+            popupListViewModels[module.name] = PopupListViewModel()
         }
         
         loadFromStorage()
@@ -33,17 +34,17 @@ class PopupState {
     
     func loadFromStorage() {
         for (key, value) in popupListViewModels {
-            let module = modules.first(where: {$0.getModuleDetails().name == key})!
-            value.setItems(module.getStorage().getFilteredListOfItems(query: query))
+            let module = modules.first(where: {$0.name == key})!
+            value.setItems(module.storage.getFilteredListOfItems(query: query))
         }
     }
     
-    private func getActiveModule() -> Module {
-        return modules.first(where: {$0.getModuleDetails().name == activeModule.name})!
+    func getActiveModule() -> Module {
+        return modules.first(where: {$0.name == activeModuleName})!
     }
     
     private func getActiveViewModel() -> PopupListViewModel {
-        return popupListViewModels[activeModule.name]!
+        return popupListViewModels[activeModuleName]!
     }
     
     func selectPrevious() {
@@ -56,6 +57,18 @@ class PopupState {
     
     func action() {
         guard let item = getActiveViewModel().selectedItem?.title else { return }
-        getActiveModule().getActionHandler().actionOn(on: item)
+        getActiveModule().actionHandler.actionOn(on: item)
+    }
+    
+    func nextModule() {
+        guard let currentIndex = modules.firstIndex(where: { $0.name == activeModuleName }) else {
+            return
+        }
+        let nextIndex = (currentIndex + 1) % modules.count
+        activeModuleName = modules[nextIndex].name
+    }
+    
+    func isActive(_ module: Module) -> Bool {
+        return activeModuleName == module.name
     }
 }

@@ -6,5 +6,5 @@
 //
 
 protocol ModuleStorage {
-    func getFilteredListOfItems(query: String) -> [String]
+    func getFilteredListOfItems(query: String) -> [ListItemModel]
 }

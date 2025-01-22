@@ -4,12 +4,11 @@
 //
 //  Created by Bohdan Danyliuk on 06/01/2025.
 //
+import Foundation
 
-final class ToolStorage {
+final class ToolStorage: ModuleStorage {
     
-    var data: [String] = []
-    
-    init(data: [String]) {
-        self.data = data
+    func getFilteredListOfItems(query: String) -> [ListItemModel] {
+        return DummyData.tools.map{ListItemModel(id: UUID(), title: $0)}
     }
 }

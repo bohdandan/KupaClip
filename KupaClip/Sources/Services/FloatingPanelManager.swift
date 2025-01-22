@@ -9,7 +9,7 @@ import KeyboardShortcuts
 import Combine
 
 extension KeyboardShortcuts.Name {
-    static let togglePopup = Self("togglePopup", default: .init(.p, modifiers: [.command, .shift]))
+    static let togglePopup = Self("togglePopup", default: .init(.zero, modifiers: [.command, .shift]))
 }
 
 final class FloatingPanelManager {

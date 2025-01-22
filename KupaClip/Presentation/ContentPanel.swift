@@ -3,10 +3,10 @@ import SwiftUI
 
 //Inspired by - https://github.com/Archetapp/FloatingPanelTutorial
 class ContentPanel: NSPanel {
-    var nestedView: Popup
+    var nestedView: AnyView
     
-    init(nestedView: Popup) {
-        self.nestedView = nestedView
+    init(nestedView: any View) {
+        self.nestedView = AnyView(nestedView)
         
         super.init(
             contentRect: .zero,

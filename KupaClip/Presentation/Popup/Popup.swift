@@ -2,29 +2,84 @@ import SwiftUI
 
 
 struct Popup: View {
-    @Environment(\.popupState) var state
+    @State var state: PopupState
+    @Environment(\.openSettings) var openSettings
     
     init() {
         self.state = AppContext.shared.get(PopupState.self)
         self.state.loadFromStorage()
     }
     
+    func trancateListItemTitle(_ text: String) -> String {
+        return String(text.prefix(300)
+            .replacingOccurrences(of: "\n", with: " ")
+            .replacingOccurrences(of: "\t", with: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+    
     var body: some View {
             ZStack {
-                VStack {
-                    PopupHeader(query: $state.query, activeModuleName: $state.activeModuleName, modules: state.modules)
+                VStack (spacing: 0) {
+                    PopupHeader(state: $state)
                     
                     ForEach(Array(state.modules.enumerated()), id: \.1.name) { index, module in
                         let insertion: Edge = index == 0 ? .leading : .trailing
                         let removal: Edge = index == state.modules.endIndex - 1 ? .trailing : .leading
 
-                        list(viewModel: state.popupListViewModels[module.name]!)
-                        .transition(.asymmetric (
-                            insertion: .move(edge: insertion),
-                            removal: .move(edge: removal)
-                        ))
+                        if (state.activeModuleName == module.name) {
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                        .frame(width: 13)
+                                        .background(
+                                            Rectangle()
+                                                .fill(Color.gray)
+                                                .opacity(0.8)
+                                                .frame(height: 1))
+                                    
+                                    Text(module.name)
+                                        .foregroundColor(.gray)
+                                        .font(.caption)
+                                        .opacity(0.8)
+                                        .padding(.horizontal, 10)
+                                        .padding(.top, 3)
+                                        
+                                    Spacer().background(
+                                        Rectangle()
+                                            .fill(Color.gray)
+                                            .opacity(0.8)
+                                            .frame(height: 1)
+                                            .padding(.top, 0))
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 0)
+                                    
+                                list(viewModel: state.popupListViewModels[module.name]!)
+                                   
+                            }
+                            .transition(.asymmetric (
+                                insertion: .move(edge: insertion),
+                                removal: .move(edge: removal)
+                            ))
+                        }
                     }
-                    Spacer()
+                    Divider()
+                        .padding(.vertical, 0)
+                    HStack {
+                        Spacer()
+                        Image(systemName: "gear")
+                            .frame(width: 15)
+                            .foregroundColor(.gray)
+                            .help("Settings")
+                            .opacity(0.5)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .onTapGesture {
+                                withAnimation(.easeIn(duration: 0.2)) {
+                                    openSettings()
+                                }
+                            }
+                    }
                 }
                 .frame(width: 350, height: 245)
                 .background(.thinMaterial)
@@ -32,19 +87,20 @@ struct Popup: View {
                 .onAppear {
                    addKeyEventListener()
                 }
-                .ignoresSafeArea()
             }
     }
     
     private func list(viewModel: PopupListViewModel) -> some View {
         ScrollViewReader { scrollProxy in
             ScrollView([.vertical]) {
-                ForEach(viewModel.items, id:\.id) { item in
+                ForEach(Array(viewModel.items.enumerated()), id: \.offset) { index, item in
                     HStack {
-                        Text(item.title)
+                        Text(trancateListItemTitle(item.title))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                         Spacer()
-                        if let index = item.shortcut {
-                            Text("⌘\(index)")
+                        if (index < 9) {
+                            Text("⌘\(index + 1)")
                                 .opacity(0.6)
                                 .monospaced()
                         }
@@ -114,11 +170,17 @@ struct Popup: View {
         AppContext.shared.get(FloatingPanelManager.self).close()
     }
 }
-
+    
 #Preview() {
-//    AppContext.set(ClipboardStorage(maxLimit: 5, data: DummyData.clipboard))
-//    AppContext.set(SnippetStorage(data: DummyData.snippets))
-//    AppContext.set(ToolStorage(data: DummyData.tools))
-//    AppContext.set(PopupState())
+    
+    AppContext.shared.set(PopupState(modules:
+                            [
+                                ClipboardModule(AppContext.shared),
+                                SnipetModule(AppContext.shared),
+                                ToolModule(AppContext.shared)
+                            ]))
+//    AppContext.shared.get(ClipboardStorage.self)
+//        .populateData(DummyData.clipboard.map{CliboardItem()})
+
     return Popup()
 }

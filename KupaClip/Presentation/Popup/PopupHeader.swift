@@ -1,29 +1,17 @@
 import SwiftUI
 
 struct PopupHeader: View {
-    @Binding var query: String
-    @Binding var activeModuleName: String
-    @ObservationIgnored var modules: [Module]
-    
-    func next() {
-//        guard let currentIndex = PopupMode.allCases.firstIndex(of: activeMode) else { return }
-//        let nextIndex = (currentIndex + 1) % PopupMode.allCases.count
-//        activeMode = PopupMode.allCases[nextIndex]
-    }
-    
-    func isActive(_ module: Module) -> Bool {
-        return activeModuleName == module.name
-    }
+    @Binding var state: PopupState
     
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .frame(width: 15, height: 25)
-//                .foregroundColor(activeModule.getModuleDetails().color)
+                .foregroundColor(state.getActiveModule().moduleDetails.color)
                 .bold()
                 .opacity(0.6)
             
-            TextField("Search or ⇥", text: $query)
+            TextField("Search or ⇥", text: $state.query)
                 .disableAutocorrection(true)
                 .lineLimit(1)
                 .textFieldStyle(.plain)
@@ -31,22 +19,22 @@ struct PopupHeader: View {
                 .onSubmit { print("Submit") }
                 .onKeyPress(keys: [.tab]) { press in
                     withAnimation(.easeIn(duration: 0.2)) {
-                        next()
+                        state.nextModule()
                     }
                     return .handled
                 }
-            ForEach(modules, id: \.name) { module in
-                let moduleDetails = module.getModuleDetails()
+            ForEach(state.modules, id: \.name) { module in
+                let moduleDetails = module.moduleDetails
         
                 Image(systemName: moduleDetails.iconSystemName)
                     .frame(width: 15)
                     .foregroundColor(moduleDetails.color)
                     .help(module.name)
-                    .opacity(isActive(module) ? 0.8 : 0.5)
-                    .symbolEffect(.scale.up, isActive: isActive(module))
+                    .opacity(state.isActive(module) ? 0.8 : 0.5)
+                    .symbolEffect(.scale.up, isActive: state.isActive(module))
                     .onTapGesture {
                         withAnimation(.easeIn(duration: 0.2)) {
-                            activeModuleName = module.name
+                            state.activeModuleName = module.name
                         }
                     }
             }

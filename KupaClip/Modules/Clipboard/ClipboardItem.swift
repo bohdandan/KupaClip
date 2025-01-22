@@ -9,6 +9,7 @@ import Foundation
 import AppKit
 
 struct CliboardItem: Equatable, Hashable {
+    let id: UUID = UUID()
     let types: [NSPasteboard.PasteboardType]
     let content: String
     let appBundleIdentifier: String

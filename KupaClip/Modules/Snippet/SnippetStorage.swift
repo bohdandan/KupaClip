@@ -5,11 +5,11 @@
 //  Created by Bohdan Danyliuk on 06/01/2025.
 //
 
-final class SnippetStorage {
+import Foundation
+
+final class SnippetStorage: ModuleStorage {
     
-    var data: [String] = []
-    
-    init(data: [String]) {
-        self.data = data
+    func getFilteredListOfItems(query: String) -> [ListItemModel] {
+        return DummyData.snippets.map{ListItemModel(id: UUID(), title: $0)}
     }
 }

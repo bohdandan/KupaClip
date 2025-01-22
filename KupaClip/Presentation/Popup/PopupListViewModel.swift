@@ -9,20 +9,15 @@ import Combine
 
 @Observable
 class PopupListViewModel {
-    private(set) var items: [PopupListItem] = []
+    private(set) var items: [ListItemModel] = []
     private var selectedItemId: UUID?
     
-    func setItems(_ items: [String]) {
-        self.items = items
-            .enumerated()
-            .map { index, title in
-                let shortcut = index < 9 ? index + 1 : nil
-                return PopupListItem(title: title, shortcut: shortcut)
-            }
+    func setItems(_ items: [ListItemModel]) {
+        self.items = items.map{ListItemModel(id: $0.id, title: $0.title)}
         selectNext()
     }
 
-    var selectedItem: PopupListItem? {
+    var selectedItem: ListItemModel? {
         get {
             return items.first { $0.id == selectedItemId }
         }
@@ -49,27 +44,7 @@ class PopupListViewModel {
        selectedItemId = items[previousIndex].id
    }
     
-    func isSelected(item: PopupListItem) -> Bool {
+    func isSelected(item: ListItemModel) -> Bool {
         return selectedItemId == item.id
-    }
-}
-
-@Observable
-class PopupListItem: Identifiable, Hashable {
-    let id = UUID()
-    var title: String
-    var shortcut: Int?
-
-    init(title: String, shortcut: Int?) {
-        self.title = title
-        self.shortcut = shortcut
-    }
-    
-    static func == (lhs: PopupListItem, rhs: PopupListItem) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }

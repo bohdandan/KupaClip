@@ -6,36 +6,19 @@
 //
 
 struct ClipboardModule: Module {
-    
     let name = "Clipboard"
-
-    private let clipboardStorage: ClipboardStorage
-    private let clipboardActionHandler: ClipboardActionHandler
+    let moduleDetails: ModuleDetails
+    let storage: ModuleStorage
+    let actionHandler: ModuleActionHandler
     
-    init() {
-        clipboardStorage = ClipboardStorage(maxLimit: 10)
-        clipboardActionHandler = ClipboardActionHandler()
-    }
-    
-    func initialise(_ appContext: AppContext) {
-        appContext.set(clipboardStorage)
-        appContext.set(clipboardActionHandler)
-        appContext.set(ClipboardService(storage: clipboardStorage))
-    }
-    
-    func getModuleDetails() -> ModuleDetails {
-        return ModuleDetails(iconSystemName: "clipboard", color: .orange)
-    }
-
-    func getStorage() -> any ModuleStorage {
-        return clipboardStorage
-    }
-    
-    func getActionHandler() -> any ModuleActionHandler {
-        return clipboardActionHandler
-    }
-    
-    static func == (lhs: ClipboardModule, rhs: ClipboardModule) -> Bool {
-        lhs.name == rhs.name
+    init(_ appContext: AppContext) {
+        moduleDetails = ModuleDetails(iconSystemName: "clipboard", color: .orange)
+        storage = ClipboardStorage(maxLimit: 20)
+        actionHandler = ClipboardActionHandler()
+        
+        appContext.set(storage)
+        appContext.set(actionHandler)
+        appContext.set(ClipboardService(storage: storage as! ClipboardStorage))
+        appContext.set(self)
     }
 }
