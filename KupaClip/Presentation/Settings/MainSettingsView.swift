@@ -6,6 +6,9 @@ struct MainSettingsView: View {
             Tab("General", systemImage: "gear") {
                 GeneralSettingsView()
             }
+            Tab("Clipboard settings", systemImage: "clipboard") {
+                ClipboardSettingsView()
+            }
             Tab("Advanced", systemImage: "star") {
                 Text("Advanced")
             }

@@ -43,6 +43,7 @@ struct PopupHeader: View {
         .padding(.top, 2)
         
         Divider()
+            .opacity(0.7)
             .padding(.vertical, 0)
     }
 }

@@ -5,15 +5,18 @@
 //  Created by Bohdan Danyliuk on 15/01/2025.
 //
 
+import Defaults
+
 struct ClipboardModule: Module {
-    let name = "Clipboard"
+    static let NAME = "Clipboard"
+    let name = NAME
     let moduleDetails: ModuleDetails
     let storage: ModuleStorage
     let actionHandler: ModuleActionHandler
     
     init(_ appContext: AppContext) {
         moduleDetails = ModuleDetails(iconSystemName: "clipboard", color: .orange)
-        storage = ClipboardStorage(maxLimit: 20)
+        storage = ClipboardStorage(maxLimit: Defaults[.clipboardStorageSize])
         actionHandler = ClipboardActionHandler()
         
         appContext.set(storage)

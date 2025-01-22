@@ -6,7 +6,8 @@
 //
 
 struct ToolModule: Module {
-    let name = "Tool"
+    static let NAME = "Tool"
+    let name = NAME
     let moduleDetails: ModuleDetails
     let storage: ModuleStorage
     let actionHandler: ModuleActionHandler

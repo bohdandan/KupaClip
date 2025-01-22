@@ -3,13 +3,13 @@ import KeyboardShortcuts
 import Defaults
 
 struct GeneralSettingsView: View {
-    @AppStorage("showPreview") private var showPreview = true
-    @AppStorage("fontSize") private var fontSize = 12.0
 
     var body: some View {
         Form {
             Form {
-                KeyboardShortcuts.Recorder("Toggle Popup:", name: .togglePopup)
+                KeyboardShortcuts.Recorder("Open Clipboard History", name: .openClipboard)
+                KeyboardShortcuts.Recorder("Open Snippets", name: .openSnippets)
+                KeyboardShortcuts.Recorder("Open tools", name: .openTools)
                 
                 Defaults.Toggle(key: .insertIntoActiveApp) {
                     Text("Insert into active application")

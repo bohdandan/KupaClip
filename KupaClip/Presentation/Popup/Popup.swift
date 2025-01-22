@@ -34,20 +34,20 @@ struct Popup: View {
                                         .background(
                                             Rectangle()
                                                 .fill(Color.gray)
-                                                .opacity(0.8)
+                                                .opacity(0.5)
                                                 .frame(height: 1))
                                     
                                     Text(module.name)
                                         .foregroundColor(.gray)
                                         .font(.caption)
-                                        .opacity(0.8)
+                                        .opacity(0.5)
                                         .padding(.horizontal, 10)
                                         .padding(.top, 3)
                                         
                                     Spacer().background(
                                         Rectangle()
                                             .fill(Color.gray)
-                                            .opacity(0.8)
+                                            .opacity(0.5)
                                             .frame(height: 1)
                                             .padding(.top, 0))
                                 }
@@ -65,14 +65,18 @@ struct Popup: View {
                     }
                     Divider()
                         .padding(.vertical, 0)
-                    HStack {
+                    HStack (spacing: 0) {
                         Spacer()
+                        Text("⌘,")
+                            .opacity(0.5)
+                            .padding(0)
                         Image(systemName: "gear")
                             .frame(width: 15)
                             .foregroundColor(.gray)
                             .help("Settings")
                             .opacity(0.5)
-                            .padding(.horizontal, 10)
+                            .padding(.leading, 3)
+                            .padding(.trailing, 10)
                             .padding(.vertical, 5)
                             .onTapGesture {
                                 withAnimation(.easeIn(duration: 0.2)) {

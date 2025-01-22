@@ -9,7 +9,9 @@ import KeyboardShortcuts
 import Combine
 
 extension KeyboardShortcuts.Name {
-    static let togglePopup = Self("togglePopup", default: .init(.zero, modifiers: [.command, .shift]))
+    static let openClipboard = Self("openClipboard", default: .init(.zero, modifiers: [.command, .shift]))
+    static let openSnippets = Self("openSnippets")
+    static let openTools = Self("openTools")
 }
 
 final class FloatingPanelManager {
@@ -20,11 +22,23 @@ final class FloatingPanelManager {
     }
     
     private func setupPopupHotkey() {
-        KeyboardShortcuts.onKeyUp(for: .togglePopup) { [self] in
-            if (contentWindow == nil) {
-                open()
-            } else {
-                close()
+        let keys: [(KeyboardShortcuts.Name, String)] = [
+                (.openClipboard, ClipboardModule.NAME),
+                (.openSnippets, SnipetModule.NAME),
+                (.openTools, ToolModule.NAME)]
+        
+        keys.forEach { shortcut, name in
+            KeyboardShortcuts.onKeyUp(for: shortcut) { [self] in
+                if (contentWindow == nil) {
+                    AppContext.shared.get(PopupState.self).activeModuleName = name
+                    open()
+                    return
+                }
+                if (AppContext.shared.get(PopupState.self).activeModuleName == name) {
+                    close()
+                    return
+                }
+                AppContext.shared.get(PopupState.self).activeModuleName = name
             }
         }
     }

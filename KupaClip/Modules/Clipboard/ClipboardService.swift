@@ -45,7 +45,7 @@ class ClipboardService {
         let clipboardItem = CliboardItem(pasteboard: pasteboard, appBundleIdentifier: appBundleIdentifier)
         Log.clipboard.info("------ New clipboard")
         Log.clipboard.info("Content: \(pasteboard.string(forType: .string) ?? "")")
-        Log.clipboard.info("Types: \(String(pasteboard.types?.count ?? 0))")
+        Log.clipboard.info("Types: \(String(pasteboard.types?.map { $0.rawValue }.joined(separator: ", ") ?? ""))")
         Log.clipboard.info("PasteboardItems: \(String(pasteboard.pasteboardItems?.count ?? 0))")
         
         self.storage.addToHistory(clipboardItem)

@@ -6,7 +6,8 @@
 //
 
 struct SnipetModule: Module {
-    let name = "Snippet"
+    static let NAME = "Snippet"
+    let name = NAME
     let moduleDetails: ModuleDetails
     let storage: ModuleStorage
     let actionHandler: ModuleActionHandler
