@@ -20,7 +20,7 @@ struct Popup: View {
     var body: some View {
             ZStack {
                 VStack (spacing: 0) {
-                    PopupHeader(state: $state)
+                    PopupHeader(state: $state).padding(.bottom, 3)
                     
                     ForEach(Array(state.modules.enumerated()), id: \.1.name) { index, module in
                         let insertion: Edge = index == 0 ? .leading : .trailing
@@ -146,6 +146,17 @@ struct Popup: View {
    
     private func handleKeyEvent(_ event: NSEvent) -> Bool {
         Log.clipboard.log("keyboard event: \(event.keyCode)")
+        
+        let commandPressed = event.modifierFlags.contains(.command)
+        if commandPressed, let characters = event.characters, let number = Int(characters) {
+            if number > 0, number <= state.getActiveViewModel().items.count {
+                let item = state.getActiveViewModel().items[number - 1]
+                state.action(item.id)
+            } else {
+                Log.clipboard.log("No item exists for Command + \(number)")
+            }
+            return true
+        }
         
         switch event.keyCode {
         case 126: // Up arrow key

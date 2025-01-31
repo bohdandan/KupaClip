@@ -16,7 +16,7 @@ struct PopupHeader: View {
                 .lineLimit(1)
                 .textFieldStyle(.plain)
                 .strikethrough(color: .green)
-                .onSubmit { print("Submit") }
+                .padding(3)
                 .onKeyPress(keys: [.tab]) { press in
                     withAnimation(.easeIn(duration: 0.2)) {
                         state.nextModule()

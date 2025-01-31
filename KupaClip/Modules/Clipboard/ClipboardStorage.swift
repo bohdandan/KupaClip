@@ -31,6 +31,10 @@ final class ClipboardStorage: ModuleStorage {
             .map { ListItemModel(id: $0.id, title: $0.content)}
     }
     
+    func getById(id: UUID) -> CliboardItem? {
+        return data.first {$0.id == id}
+    }
+    
     func addToHistory(_ item: CliboardItem) {
         if let index = data.firstIndex(of: item) {
             data[index].timesCopied += 1

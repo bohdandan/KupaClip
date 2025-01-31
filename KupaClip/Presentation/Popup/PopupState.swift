@@ -43,7 +43,7 @@ class PopupState {
         return modules.first(where: {$0.name == activeModuleName})!
     }
     
-    private func getActiveViewModel() -> PopupListViewModel {
+    func getActiveViewModel() -> PopupListViewModel {
         return popupListViewModels[activeModuleName]!
     }
     
@@ -56,8 +56,12 @@ class PopupState {
     }
     
     func action() {
-        guard let item = getActiveViewModel().selectedItem?.title else { return }
-        getActiveModule().actionHandler.actionOn(on: item)
+        guard let itemId = getActiveViewModel().selectedItem?.id else { return }
+        action(itemId)
+    }
+    
+    func action(_ itemId: UUID) {
+        getActiveModule().actionHandler.actionOn(on: itemId)
     }
     
     func nextModule() {
